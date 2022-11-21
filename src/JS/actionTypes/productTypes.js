@@ -1,0 +1,2 @@
+export const PRODDETAILS='PRODDETAILS'
+export const DELET_PROD='DELET_PROD'
