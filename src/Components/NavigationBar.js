@@ -6,7 +6,11 @@ import { IoMdNotifications } from "react-icons/io";
 import { FaShoppingCart } from "react-icons/fa";
 import { BsSearch } from "react-icons/bs";
 import { CgProfile } from "react-icons/cg";
+import { useDispatch } from "react-redux";
+import { filterbycategory, filterbyname } from "../JS/actions/productActions";
+import { Form } from "react-bootstrap";
 const NavigationBar = () => {
+  const dispatch = useDispatch();
   return (
     <div className="Logoc">
       <Link to="/">
@@ -21,8 +25,26 @@ const NavigationBar = () => {
       <div>
         <BsSearch />
 
-        <input type="text" id="search" placeholder="search" />
+        <input
+          type="text"
+          id="search"
+          placeholder="search"
+          onChange={(e) => dispatch(filterbyname(e.target.value.trim()))}
+        />
+     
       </div>
+      <Form.Select
+          aria-label="Default select example"
+          name="category"
+          onChange={(e)=>dispatch(filterbycategory(e.target.value))}
+          
+        >
+          <option value='all'>all</option>
+          <option value="men">men</option>
+          <option value="women">women</option>
+          <option value="jewelery">jewelery</option>
+          <option value="electronics">electronics</option>
+        </Form.Select>
       <div className="access">
         <Link to="/notifications" id="notification">
           <IoMdNotifications />

@@ -31,7 +31,7 @@ const ProductCard = ({ el }) => {
                   />
                 </div>
                 <div className="a-size" style={{cursor:"pointer"}}>
-                  <AiFillEdit />
+                  <Link to={`/edit/${el.id}`}><AiFillEdit /></Link>
 
                   <AiFillDelete onClick={()=>dispatch(deletprod(el.id))} />
                 </div>

@@ -4,10 +4,17 @@ import {
   DELETEPRODPANIER,
   INCREMENTQTE,
 } from "../actionTypes/panierTypes";
-import { DELET_PROD, PRODDETAILS } from "../actionTypes/productTypes";
+import {
+  ADDNEWPRODUCT,
+  DELET_PROD,
+  EDITPRODUCT,
+  FILTERBYCATEGORY,
+  FILTERBYNAME,
+  PRODDETAILS,
+} from "../actionTypes/productTypes";
 import { products } from "./data";
 
-const initState = { listProd: products, panier: [], total: 0, details: {} };
+const initState = { listProd: products, panier: [], total: 0, details: {} , value:"",category:'all'};
 export const shoppingcardReducer = (state = initState, { type, payload }) => {
   switch (type) {
     case ADD_TO_CARD:
@@ -115,6 +122,35 @@ export const shoppingcardReducer = (state = initState, { type, payload }) => {
         panier: state.panier.filter((el) => el.id != payload),
         total: pdpn ? state.total - pdpn.pT : state.total,
       };
+    case ADDNEWPRODUCT:
+      return {
+        ...state,
+        listProd: [payload, ...state.listProd],
+      };
+    case EDITPRODUCT:
+      const epdpn = state.panier.find((el) => el.id == payload.id);
+      return {
+        ...state,
+        listProd: state.listProd.map((el) =>
+          el.id == payload.id ? { ...el, ...payload } : el
+        ),
+        panier: epdpn
+          ? state.panier.map((el) =>
+              el.id == payload.id
+                ? {
+                    ...el,
+                    ...payload,
+                    pT: Number(payload.price) * Number(epdpn.qteA),
+                  }
+                : el
+            )
+          : state.panier,
+          
+      };
+      case FILTERBYNAME:
+      return  {...state,value:payload}
+      case FILTERBYCATEGORY:
+      return  {...state,category:payload}
     default:
       return state;
   }

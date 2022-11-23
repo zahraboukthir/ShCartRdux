@@ -1,4 +1,4 @@
-import { ADD_TO_CARD, DECREMENTQTE, DELETEPRODPANIER, INCREMENTQTE } from "../actionTypes/panierTypes";
+import { ADD_TO_CARD, DECREMENTQTE, DELETEPRODPANIER, EDITPRODPANIER, INCREMENTQTE } from "../actionTypes/panierTypes";
 
 export const add_to_card = (product) => {
     console.log(product)
