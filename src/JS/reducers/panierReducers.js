@@ -14,7 +14,14 @@ import {
 } from "../actionTypes/productTypes";
 import { products } from "./data";
 
-const initState = { listProd: products, panier: [], total: 0, details: {} , value:"",category:'all'};
+const initState = {
+  listProd: products,
+  panier: [],
+  total: 0,
+  details: {},
+  value: "",
+  category: "all",
+};
 export const shoppingcardReducer = (state = initState, { type, payload }) => {
   switch (type) {
     case ADD_TO_CARD:
@@ -28,15 +35,20 @@ export const shoppingcardReducer = (state = initState, { type, payload }) => {
           ...state,
           panier: [
             ...state.panier,
-            { ...payload, qteA: 1, pT: payload.price, QtS: payload.QtS - 1 },
+            {
+              ...payload,
+              qteA: 1,
+              pT: Number(payload.price),
+              QtS: Number(payload.QtS) - 1,
+            },
           ],
-          total: state.total + Number(payload.price),
+          total: Number(state.total) + Number(payload.price),
           listProd: state.listProd.map((el) =>
             el.id == payload.id
               ? {
                   ...el,
 
-                  QtS: el.QtS - 1,
+                  QtS: Number(el.QtS) - 1,
                 }
               : el
           ),
@@ -50,9 +62,9 @@ export const shoppingcardReducer = (state = initState, { type, payload }) => {
             el.id == payload.id
               ? {
                   ...el,
-                  qteA: el.qteA + 1,
-                  QtS: el.QtS - 1,
-                  pT: el.pT + el.price,
+                  qteA: Number(el.qteA) + 1,
+                  QtS: Number(el.QtS) - 1,
+                  pT: Number(el.pT) + Number(el.price),
                 }
               : el
           ),
@@ -61,11 +73,11 @@ export const shoppingcardReducer = (state = initState, { type, payload }) => {
               ? {
                   ...el,
 
-                  QtS: el.QtS - 1,
+                  QtS: Number(el.QtS) - 1,
                 }
               : el
           ),
-          total: state.total + Number(payload.price),
+          total: Number(state.total) + Number(payload.price),
         };
       } else {
         alert("fin du stock");
@@ -79,9 +91,9 @@ export const shoppingcardReducer = (state = initState, { type, payload }) => {
             el.id == payload.id
               ? {
                   ...el,
-                  qteA: el.qteA - 1,
-                  QtS: el.QtS + 1,
-                  pT: el.pT - el.price,
+                  qteA: Number(el.qteA) - 1,
+                  QtS: Number(el.QtS) + 1,
+                  pT: Number(el.pT) - Number(el.price),
                 }
               : el
           ),
@@ -90,7 +102,7 @@ export const shoppingcardReducer = (state = initState, { type, payload }) => {
               ? {
                   ...el,
 
-                  QtS: el.QtS + 1,
+                  QtS: Number(el.QtS) + 1,
                 }
               : el
           ),
@@ -103,10 +115,10 @@ export const shoppingcardReducer = (state = initState, { type, payload }) => {
     case DELETEPRODPANIER:
       return {
         ...state,
-        total: state.total - payload.pT,
+        total: Number(state.total) - Number(payload.pT),
         panier: state.panier.filter((el) => el.id == !payload.id),
         listProd: state.listProd.map((el) =>
-          el.id == payload.id ? { ...el, QtS: el.QtS + payload.qteA } : el
+          el.id == payload.id ? { ...el, QtS: Number(el.QtS) + Number(payload.qteA) } : el
         ),
       };
     case PRODDETAILS:
@@ -120,7 +132,7 @@ export const shoppingcardReducer = (state = initState, { type, payload }) => {
         ...state,
         listProd: state.listProd.filter((el) => el.id != payload),
         panier: state.panier.filter((el) => el.id != payload),
-        total: pdpn ? state.total - pdpn.pT : state.total,
+        total: pdpn ? Number(state.total) - Number(pdpn.pT) : Number(state.total),
       };
     case ADDNEWPRODUCT:
       return {
@@ -145,12 +157,16 @@ export const shoppingcardReducer = (state = initState, { type, payload }) => {
                 : el
             )
           : state.panier,
-          
+        total: epdpn
+          ? state.total -
+            Number(epdpn.price) * Number(epdpn.qteA) +
+            Number(payload.price) * Number(epdpn.qteA)
+          : Number(state.total),
       };
-      case FILTERBYNAME:
-      return  {...state,value:payload}
-      case FILTERBYCATEGORY:
-      return  {...state,category:payload}
+    case FILTERBYNAME:
+      return { ...state, value: payload };
+    case FILTERBYCATEGORY:
+      return { ...state, category: payload };
     default:
       return state;
   }
